@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.log
+live_*.png
+nuc_result.png
+.DS_Store
