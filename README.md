@@ -1,6 +1,8 @@
-# INREII F1 热成像二次开发 SDK
+# F1 Thermal Imaging SDK (INREII F1)
 
 面向 INREII F1 热成像仪（InfiRay 方案, USB 04b4:000a）的 Linux 端二次开发 SDK。
+
+> **声明**: 本项目为独立的互操作性研究项目，与 InfiRay / INREII 无任何隶属或授权关系。"INREII"、"InfiRay" 及相关标识为其各自所有者的商标，此处仅作设备型号指代。本项目按"现状"提供，使用产生的任何风险由使用者自行承担。
 
 > 设备通信协议、测温模型与标定 SOP 见 `docs/F1_二次开发接口文档.md`。
 
@@ -96,3 +98,7 @@ f1-thermal-sdk/
 | P3 | MP4 录制封装、色板精确还原、离线回放分析 |
 
 完整功能清单与建议见 `docs/F1_二次开发接口文档.md` 第 7/8 节。
+
+## License
+
+MIT — 见 [LICENSE](LICENSE)。
