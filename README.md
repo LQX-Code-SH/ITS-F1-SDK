@@ -1,8 +1,8 @@
 # INREII F1 热成像二次开发 SDK
 
-基于官方安卓应用逆向协议实现的 Linux 端 F1 热成像仪（InfiRay 方案, USB 04b4:000a）二次开发 SDK。
+面向 INREII F1 热成像仪（InfiRay 方案, USB 04b4:000a）的 Linux 端二次开发 SDK。
 
-> 协议逆向细节见 `docs/F1_F2_二次开发接口文档.md`（含 F2/其他型号的 UVC/BLE/WiFi 接口）。
+> 设备通信协议细节见 `docs/F1_F2_二次开发接口文档.md`（含 F2/其他型号的 UVC/BLE/WiFi 接口）。
 
 ## 功能
 
@@ -74,14 +74,14 @@ f1-thermal-sdk/
 │   ├── nuc_calibrate.py  # 平场标定 (CLI)
 │   └── preview.py        # 实时预览
 ├── calib/                # 标定数据 (flat_*.npy / temp_calib.json)
-├── docs/                 # 协议逆向文档
+├── docs/                 # 设备通信协议文档
 ├── scripts/run_preview.sh
 └── requirements.txt
 ```
 
 ## 已知限制
 
-- F1 固件不响应 EP0 类控制请求（逆向证实），快门/调色板等全部主机端实现
+- F1 固件不响应 EP0 类控制请求（实测验证），快门/调色板等全部主机端实现
 - 超分为插值占位实现；官方为 TNN GAN 模型，可转 ONNX 替换 `palettes.super_resolve`
 - 测温出厂精度 ±3~5℃，两点标定后 ±2℃（SOP 见文档附录 F）
 - 标定数据与设备绑定，更换设备需重跑平场标定

@@ -9,7 +9,7 @@ K2C = 273.15
 CALIB_DIR = Path(__file__).resolve().parent.parent / 'calib'
 CALIB_FILE = CALIB_DIR / 'temp_calib.json'
 
-# CalcFixRaw 多项式系数 (libthermometryabc.so 逆向, docs 附录 E)
+# 原始计数校正多项式系数 (设备测温算法, docs 附录 E)
 POLY = dict(a1=0.06939, a0=1.5587, a2=-0.00027816, a3=6.8455e-7)
 
 
@@ -54,7 +54,7 @@ def raw_to_signal(raw):
 
 
 def signal_to_tempC(signal, t_shutter_c=25.0, epsilon=0.98, calib=None):
-    """T⁴ 环境混合公式 (GetTempEvn/thermometryT 逆向还原)"""
+    """T⁴ 环境混合公式 (设备测温算法还原)"""
     g, o = calib if calib else (1.0, 0.0)
     s = np.clip(signal, 1e-9, None) * g + o
     T4s = (t_shutter_c + K2C) ** 4

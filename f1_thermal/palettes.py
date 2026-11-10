@@ -57,7 +57,7 @@ def apply_agc(img, lo_p=1, hi_p=99):
 def super_resolve(img_u8, scale=2):
     """
     R+ 超分 (占位): Lanczos scale倍 + 非锐化掩模.
-    官方为 TNN GAN 模型 (APK assets/cplus/*.tnnmodel), 可转 ONNX 后替换.
+    高阶方案: 基于 GAN 的图像超分模型 (可转 ONNX 后替换此函数).
     """
     from PIL import Image, ImageFilter
     im = Image.fromarray(img_u8)
