@@ -1,6 +1,6 @@
 """测温两点标定 (交互式) — 生成 calib/temp_calib.json
 
-SOP 详见 docs/F1_F2_二次开发接口文档.md 附录 F
+SOP 详见 docs/F1_二次开发接口文档.md 第 5 节
 """
 import datetime
 import json

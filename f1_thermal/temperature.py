@@ -9,7 +9,7 @@ K2C = 273.15
 CALIB_DIR = Path(__file__).resolve().parent.parent / 'calib'
 CALIB_FILE = CALIB_DIR / 'temp_calib.json'
 
-# 原始计数校正多项式系数 (设备测温算法, docs 附录 E)
+# 原始计数校正多项式系数 (设备测温算法)
 POLY = dict(a1=0.06939, a0=1.5587, a2=-0.00027816, a3=6.8455e-7)
 
 

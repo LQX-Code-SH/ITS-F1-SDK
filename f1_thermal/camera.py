@@ -8,7 +8,7 @@ BLOCK, HDR = 14348, 12             # 流块: 12B头 + 14336B数据
 W, H = 256, 192                    # 图像分辨率
 BLOCK_TYPES = [0x01, 0x1D, 0x39, 0x55, 0x71, 0x8D, 0xA9]   # 帧内 7 块循环
 
-# setZoom 魔数命令 (EP0 类请求, CS=0x0B) — 详见 docs 附录 D
+# 扩展命令常量 (EP0 类请求, CS=0x0B)
 CMD_SHUTTER         = 0x8000
 CMD_BG_CORRECT      = 0x8001
 CMD_LASER_CROSS_ON  = 0x8085
