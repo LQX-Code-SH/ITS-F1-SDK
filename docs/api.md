@@ -22,7 +22,7 @@ sudo -E python3 -m its_sdk calibrate-flat   # 平场标定（首次使用必做�
 sudo -E python3 -m its_sdk calibrate-temp   # 测温两点标定（可选）
 ```
 
-预览按键: `q` 退出 / `p` 切换色板 / `s` 截图 / `n` 刷新偏置。
+预览按键: `q` 退出 / `p` 切换色板 / `s` 截图 (保存到 `images/`) / `n` 刷新偏置。
 支持热插拔: 设备拔出后窗口显示等待提示，重新插入自动恢复。
 
 ---

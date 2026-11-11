@@ -9,7 +9,7 @@ from ..camera import F1Camera
 from ..temperature import shutter_raw_from_telemetry, temp_from_shutter_ref
 from ..render import colorize, PALETTES
 from ..denoise import load_flat, nuc_apply
-from ..paths import FLAT_OFFSET, ensure_calib_dir
+from ..paths import FLAT_OFFSET, IMAGES_DIR, ensure_calib_dir, ensure_images_dir
 
 W, H = 256, 192
 SCALE = 3
@@ -145,8 +145,9 @@ def run(palette='iron_bow'):
             elif key == ord('p'):
                 CUR_PALETTE[0] = PALETTES[(PALETTES.index(CUR_PALETTE[0]) + 1) % len(PALETTES)]
             elif key == ord('s'):
-                fn = 'live_%d.png' % int(time.time())
-                cv2.imwrite(fn, compose(tC, float(tC.min()), float(tC.max())))
+                fn = IMAGES_DIR / ('live_%d.png' % int(time.time()))
+                ensure_images_dir()
+                cv2.imwrite(str(fn), compose(tC, float(tC.min()), float(tC.max())))
                 print('已保存', fn)
             elif key == ord('n') and gain is not None:
                 fr = cam.read_frames(40, timeout=800)

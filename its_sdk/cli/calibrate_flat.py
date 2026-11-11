@@ -7,6 +7,7 @@ from PIL import Image
 
 from ..camera import F1Camera
 from ..denoise import build_flat, nuc_apply
+from ..paths import IMAGES_DIR, ensure_images_dir
 from ..render import colorize, apply_agc
 
 
@@ -34,8 +35,10 @@ def main():
                           .resize((W*2, H*2)), (0, 20))
             cmp_img.paste(Image.fromarray(colorize(apply_agc(after), 'iron_bow'))
                           .resize((W*2, H*2)), (W*2+30, 20))
-            cmp_img.save('nuc_result.png')
-            print("对比图 nuc_result.png 已保存")
+            out = IMAGES_DIR / 'nuc_result.png'
+            ensure_images_dir()
+            cmp_img.save(str(out))
+            print("对比图 %s 已保存" % out)
     finally:
         cam.close()
 

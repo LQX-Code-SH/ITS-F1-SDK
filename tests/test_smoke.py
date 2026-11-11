@@ -37,6 +37,10 @@ class SmokeTest(unittest.TestCase):
             self.assertEqual(r.stdout.strip(), target)
             self.assertTrue(os.path.isdir(target))
 
+    def test_images_dir(self):
+        from its_sdk.paths import IMAGES_DIR
+        self.assertEqual(IMAGES_DIR, ROOT / 'images')
+
     def test_empty_calib_dir_falls_back(self):
         env = dict(os.environ, F1_CALIB_DIR='', PYTHONPATH=str(ROOT))
         r = subprocess.run([sys.executable, '-c',

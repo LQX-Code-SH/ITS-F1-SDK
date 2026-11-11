@@ -17,7 +17,14 @@ FLAT_GAIN = CALIB_DIR / 'flat_gain.npy'
 FLAT_OFFSET = CALIB_DIR / 'flat_offset.npy'
 FLAT_BAD = CALIB_DIR / 'flat_bad.npy'
 
+IMAGES_DIR = PROJECT_ROOT / 'images'    # 预览截图 / 标定对比图 (不入库)
+
 
 def ensure_calib_dir():
     """创建标定目录 (写入标定数据前调用)"""
     CALIB_DIR.mkdir(parents=True, exist_ok=True)
+
+
+def ensure_images_dir():
+    """创建图片输出目录 (保存截图前调用)"""
+    IMAGES_DIR.mkdir(parents=True, exist_ok=True)

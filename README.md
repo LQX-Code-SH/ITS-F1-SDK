@@ -85,6 +85,7 @@ ITS-F1-SDK/
 │       ├── calibrate_flat.py # 平场标定
 │       └── calibrate_temp.py # 测温两点标定
 ├── calib/                    # 标定数据 (flat_*.npy / temp_calib.json)
+├── images/                   # 预览截图 (运行时创建, 不入库)
 ├── docs/api.md               # 接口文档
 ├── scripts/run_preview.sh
 ├── tests/test_smoke.py       # 导入/CLI 冒烟测试
