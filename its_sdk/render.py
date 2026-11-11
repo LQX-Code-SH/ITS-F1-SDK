@@ -39,7 +39,7 @@ def make_palette(name: str) -> np.ndarray:
                         np.clip(0.8-1.2*np.abs(x-0.55), 0.05, 1),
                         np.clip(0.9-x*1.1, 0, 1)], axis=1)
     else:
-        lut = np.stack([x]*3, axis=1)
+        raise ValueError('未知色板 %r, 可选: %s' % (name, ', '.join(PALETTES)))
     return (np.clip(lut, 0, 1) * 255).astype(np.uint8)
 
 

@@ -17,9 +17,9 @@
 ## 2. 快速开始
 
 ```bash
-sudo -E python3 -m f1_thermal.preview          # 实时预览
-sudo -E python3 -m f1_thermal.nuc_calibrate    # 平场标定（首次使用必做）
-sudo -E python3 -m f1_thermal.calibration      # 测温两点标定（可选）
+sudo -E python3 -m its_sdk preview          # 实时预览
+sudo -E python3 -m its_sdk calibrate-flat   # 平场标定（首次使用必做）
+sudo -E python3 -m its_sdk calibrate-temp   # 测温两点标定（可选）
 ```
 
 预览按键: `q` 退出 / `p` 切换色板 / `s` 截图 / `n` 刷新偏置。
@@ -32,7 +32,7 @@ sudo -E python3 -m f1_thermal.calibration      # 测温两点标定（可选）
 ### 3.1 采集
 
 ```python
-from f1_thermal import F1Camera
+from its_sdk import F1Camera
 
 cam = F1Camera()               # 打开设备
 frames = cam.read_frames(10)   # 返回 [(img, telemetry), ...]
@@ -47,7 +47,7 @@ cam.close()
 ### 3.2 设备信息
 
 ```python
-from f1_thermal import TempParams
+from its_sdk import TempParams
 
 tp = TempParams(frames[0][1])
 tp.model      # 型号 ("F1", 遥测自报)
@@ -61,7 +61,7 @@ tp.summary()  # 汇总字符串
 ### 3.3 测温
 
 ```python
-from f1_thermal import temp_from_shutter_ref, shutter_raw_from_telemetry
+from its_sdk import temp_from_shutter_ref, shutter_raw_from_telemetry
 
 sr = shutter_raw_from_telemetry(telemetry)        # 快门参考原始计数
 tC = temp_from_shutter_ref(img, sr)               # 温度场 (℃, np.float64)
@@ -69,12 +69,12 @@ tC = temp_from_shutter_ref(img, sr)               # 温度场 (℃, np.float64)
 
 模型: `T = (T_shutter + 273.15) × (raw / shutter_raw)^(1/4) − 273.15`
 （快门参考计数由设备每帧自报，自动跟随快门温度漂移）
-执行两点标定后，SDK 自动叠加线性修正（见第 6 节）。
+执行两点标定后，SDK 自动叠加线性修正（见第 5 节）。
 
 ### 3.4 渲染
 
 ```python
-from f1_thermal import colorize, apply_agc, super_resolve, PALETTES
+from its_sdk import colorize, apply_agc, super_resolve, PALETTES
 
 u8 = apply_agc(tC, 1, 99)                  # 百分位拉伸 -> uint8
 rgb = colorize(u8, 'iron_bow')             # 伪彩 (256 级 RGB LUT)
@@ -86,14 +86,14 @@ rgb2x = super_resolve(rgb)                 # 2× 超分 (512×384)
 ### 3.5 去噪（NUC）
 
 ```python
-from f1_thermal import load_flat, nuc_apply, temporal_median
+from its_sdk import load_flat, nuc_apply, temporal_median
 
-gain, offset, bad = load_flat()            # 加载平场标定 (nuc_calibrate 生成)
+gain, offset, bad = load_flat()            # 加载平场标定 (calibrate-flat 生成)
 img = nuc_apply(raw_img, gain, offset, bad)   # 逐像素校正 + 坏点替换 + 条纹去除
 med = temporal_median(frames)              # 多帧时域中值
 ```
 
-未标定时可用 `F1Camera.fpn_correct(frames)`（行列均值法，效果较弱）。
+未标定时预览会自动退化为行列均值校正（效果较弱）。
 
 ### 3.6 控制命令
 
@@ -127,10 +127,11 @@ cam.set_u8(cs, v)          # 标准 UVC PU 通道 (亮度/对比度等, cs 见 c
 - 出厂参数直出精度约 ±3~5℃
 - 两点标定后可达 ±2℃：冰水混合物（0℃）+ 热水（温度计实测）两个参考点
 - 标定结果存于 `calib/temp_calib.json`，SDK 自动加载；删除该文件即回退未标定状态
+- 标定目录默认 `calib/`，可用 `F1_CALIB_DIR` 环境变量覆盖（导入时读取）
 - 标定与设备序列号绑定，更换设备需重标
 - 低发射率目标（金属亮面等）读数偏低属物理现象
 
-完整 SOP 见 `python3 -m f1_thermal.calibration` 交互提示。
+完整 SOP 见 `python3 -m its_sdk calibrate-temp` 交互提示。
 
 ---
 

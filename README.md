@@ -32,22 +32,27 @@ sudo udevadm control --reload && sudo udevadm trigger
 
 ## 快速开始
 
+在仓库根目录执行（`python -m its_sdk` 依赖当前目录可导入包）：
+
 ```bash
 # 1. 平场标定（首次使用必做）: 运行后按提示, 前 6 秒用手掌盖住镜头
-sudo -E python3 -m f1_thermal.nuc_calibrate
+sudo -E python3 -m its_sdk calibrate-flat
 
 # 2. 实时预览
-sudo -E python3 -m f1_thermal.preview
+sudo -E python3 -m its_sdk preview
 
 # 3. 测温两点标定（可选, 精度提升至 ±2℃）
-sudo -E python3 -m f1_thermal.calibration
+sudo -E python3 -m its_sdk calibrate-temp
 ```
+
+标定数据默认写入仓库下的 `calib/`；如需存到其他位置，启动前设置
+`F1_CALIB_DIR=/path/to/calib`（导入时读取，建议绝对路径；置空视为未设置）。
 
 ## Python API
 
 ```python
-from f1_thermal import (F1Camera, TempParams, colorize, apply_agc,
-                        temp_from_shutter_ref, shutter_raw_from_telemetry)
+from its_sdk import (F1Camera, TempParams, colorize, apply_agc,
+                     temp_from_shutter_ref, shutter_raw_from_telemetry)
 
 cam = F1Camera()
 frames = cam.read_frames(10)
@@ -61,24 +66,37 @@ rgb = colorize(apply_agc(tC), 'iron_bow')      # 伪彩 RGB
 cam.close()
 ```
 
-完整接口说明见 [docs/二次开发接口文档.md](docs/二次开发接口文档.md)。
+完整接口说明见 [docs/api.md](docs/api.md)。
 
 ## 项目结构
 
 ```
-f1-thermal-sdk/
-├── f1_thermal/           # Python 包
-│   ├── camera.py         # USB 采集/帧同步/热插拔
-│   ├── temperature.py    # 测温与遥测解析
-│   ├── palettes.py       # 色板/AGC/超分
-│   ├── denoise.py        # NUC 去噪
-│   ├── calibration.py    # 测温两点标定 (CLI)
-│   ├── nuc_calibrate.py  # 平场标定 (CLI)
-│   └── preview.py        # 实时预览
-├── calib/                # 标定数据 (flat_*.npy / temp_calib.json)
-├── docs/                 # 接口文档
+ITS-F1-SDK/
+├── its_sdk/                  # Python 包
+│   ├── __init__.py           # 公共 API 导出
+│   ├── __main__.py           # 统一 CLI 入口 (python -m its_sdk)
+│   ├── paths.py              # 标定数据路径 (可用 F1_CALIB_DIR 覆盖)
+│   ├── camera.py             # USB 采集/帧同步/热插拔
+│   ├── temperature.py        # 测温与遥测解析
+│   ├── render.py             # 色板/AGC/超分
+│   ├── denoise.py            # NUC 去噪
+│   └── cli/
+│       ├── preview.py        # 实时预览
+│       ├── calibrate_flat.py # 平场标定
+│       └── calibrate_temp.py # 测温两点标定
+├── calib/                    # 标定数据 (flat_*.npy / temp_calib.json)
+├── docs/api.md               # 接口文档
 ├── scripts/run_preview.sh
-└── requirements.txt
+├── tests/test_smoke.py       # 导入/CLI 冒烟测试
+├── requirements.txt
+├── LICENSE
+└── .gitignore
+```
+
+## 开发
+
+```bash
+python3 -m unittest discover -s tests -v   # 无需设备
 ```
 
 ## 已知限制

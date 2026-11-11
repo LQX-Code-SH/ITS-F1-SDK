@@ -1,13 +1,12 @@
 """测温: 遥测解析 / T⁴ 自校准 / 两点标定加载"""
 import json
 import struct
-from pathlib import Path
 
 import numpy as np
 
+from .paths import CALIB_FILE
+
 K2C = 273.15
-CALIB_DIR = Path(__file__).resolve().parent.parent / 'calib'
-CALIB_FILE = CALIB_DIR / 'temp_calib.json'
 
 # 原始计数校正多项式系数 (设备测温算法)
 POLY = dict(a1=0.06939, a0=1.5587, a2=-0.00027816, a3=6.8455e-7)
@@ -81,16 +80,22 @@ _CALIB_CACHE = None
 
 
 def load_temp_calib():
-    """加载两点标定结果 (temp_calibration.py 生成); 无则返回 None"""
+    """加载两点标定结果 (cli/calibrate_temp.py 生成); 无则返回 None"""
     global _CALIB_CACHE
     if _CALIB_CACHE is not None:
         return _CALIB_CACHE or None
     try:
-        _CALIB_CACHE = json.loads(CALIB_FILE.read_text())
-        return _CALIB_CACHE
-    except Exception:
+        data = json.loads(CALIB_FILE.read_text())
+        data['a'], data['b'] = float(data['a']), float(data['b'])
+    except FileNotFoundError:
         _CALIB_CACHE = {}
         return None
+    except (OSError, ValueError, KeyError, TypeError) as e:
+        print('警告: 标定文件 %s 无效 (%s), 按未标定处理' % (CALIB_FILE, e))
+        _CALIB_CACHE = {}
+        return None
+    _CALIB_CACHE = data
+    return _CALIB_CACHE
 
 
 def reload_temp_calib():

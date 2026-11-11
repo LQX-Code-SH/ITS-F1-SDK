@@ -4,12 +4,12 @@ import time
 
 import cv2
 import numpy as np
-from scipy import ndimage
 
-from .camera import F1Camera
-from .temperature import TempParams, shutter_raw_from_telemetry, temp_from_shutter_ref
-from .palettes import colorize, apply_agc, PALETTES
-from .denoise import load_flat, nuc_apply
+from ..camera import F1Camera
+from ..temperature import shutter_raw_from_telemetry, temp_from_shutter_ref
+from ..render import colorize, PALETTES
+from ..denoise import load_flat, nuc_apply
+from ..paths import FLAT_OFFSET, ensure_calib_dir
 
 W, H = 256, 192
 SCALE = 3
@@ -57,11 +57,14 @@ def compose(tC, tmin, tmax):
 
 
 def run(palette='iron_bow'):
+    if palette not in PALETTES:
+        raise SystemExit("未知色板 %r, 可选: %s" % (palette, ', '.join(PALETTES)))
     CUR_PALETTE[0] = palette
     gain, offset, bad = load_flat()
     print("平场标定:", "已加载" if gain is not None else "未找到(退化用行列校正)")
 
     cam = None
+    open_err = None
     fps_t, fps_n = time.time(), 0
     shutter_hold = 0
     fail_count = 0
@@ -77,9 +80,12 @@ def run(palette='iron_bow'):
                         cam = F1Camera()
                         buf = []
                         fail_count = 0
+                        open_err = None
                         print("设备已连接")
-                    except RuntimeError:
-                        pass
+                    except RuntimeError as e:
+                        if str(e) != open_err:      # 同一错误只提示一次
+                            open_err = str(e)
+                            print("打开设备失败:", e)
                 if cam is None:
                     wait = np.zeros((H*SCALE+30, W*SCALE+90, 3), dtype=np.uint8)
                     cv2.putText(wait, 'Waiting for ITS F1 device...',
@@ -123,7 +129,6 @@ def run(palette='iron_bow'):
                 proc = scene - scene.mean(axis=0, keepdims=True) \
                            - scene.mean(axis=1, keepdims=True) + scene.mean()
 
-            tp = TempParams(frames[-1][1])
             tC = temp_from_shutter_ref(proc, shutter_raw_from_telemetry(frames[-1][1]))
             tC = np.clip(tC, *np.percentile(tC, [0.2, 99.8]))
 
@@ -148,8 +153,8 @@ def run(palette='iron_bow'):
                 if fr:
                     st = np.stack([f[0].astype(np.float32) for f in fr])
                     offset = offset - (st.mean(axis=0) - np.median(st)) * 0.5
-                    np.save(__import__('pathlib').Path(__file__)
-                            .resolve().parent.parent / 'calib' / 'flat_offset.npy', offset)
+                    ensure_calib_dir()
+                    np.save(FLAT_OFFSET, offset)
                     print('偏置已刷新')
     except KeyboardInterrupt:
         pass

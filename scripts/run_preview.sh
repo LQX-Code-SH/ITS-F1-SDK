@@ -3,7 +3,7 @@
 cd "$(dirname "$0")/.." || exit 1
 if [ "$EUID" -ne 0 ]; then
     exec sudo -E env PYTHONPATH="$(pwd)${PYTHONPATH:+:$PYTHONPATH}" \
-        DISPLAY="${DISPLAY:-:0}" python3 -m f1_thermal.preview "${1:-iron_bow}"
+        DISPLAY="${DISPLAY:-:0}" python3 -m its_sdk preview "${1:-iron_bow}"
 else
-    exec env PYTHONPATH="$(pwd)${PYTHONPATH:+:$PYTHONPATH}" python3 -m f1_thermal.preview "${1:-iron_bow}"
+    exec env PYTHONPATH="$(pwd)${PYTHONPATH:+:$PYTHONPATH}" python3 -m its_sdk preview "${1:-iron_bow}"
 fi

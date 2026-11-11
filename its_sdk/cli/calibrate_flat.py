@@ -1,9 +1,13 @@
-"""平场标定 CLI: 采集期间自动检测均匀段(盖镜头), 生成 calib/flat_*.npy"""
-import numpy as np
+"""平场标定 CLI: 采集期间自动检测均匀段(盖镜头), 生成 calib/flat_*.npy
 
-from .camera import F1Camera
-from .denoise import build_flat, load_flat, nuc_apply
-from .palettes import colorize, apply_agc
+标定目录默认 calib/，可用 F1_CALIB_DIR 环境变量覆盖。
+"""
+import numpy as np
+from PIL import Image
+
+from ..camera import F1Camera
+from ..denoise import build_flat, nuc_apply
+from ..render import colorize, apply_agc
 
 
 def main():
@@ -24,7 +28,6 @@ def main():
             print("高频噪声: 前=%.1f 后=%.1f" % (
                 float((before - ndimage_gaussian(before)).std()),
                 float((after - ndimage_gaussian(after)).std())))
-            Image = __import__('PIL.Image', fromlist=['Image']).Image
             W, H = 256, 192
             cmp_img = Image.new('RGB', (W*4+30, H*2+40), (25, 25, 25))
             cmp_img.paste(Image.fromarray(colorize(apply_agc(before), 'iron_bow'))

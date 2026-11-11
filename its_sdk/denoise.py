@@ -2,12 +2,7 @@
 import numpy as np
 from scipy import ndimage
 
-from .camera import F1Camera
-from .temperature import CALIB_DIR
-
-FLAT_GAIN = CALIB_DIR / 'flat_gain.npy'
-FLAT_OFFSET = CALIB_DIR / 'flat_offset.npy'
-FLAT_BAD = CALIB_DIR / 'flat_bad.npy'
+from .paths import FLAT_GAIN, FLAT_OFFSET, FLAT_BAD, ensure_calib_dir
 
 
 def detect_bad_pixels(stack):
@@ -54,7 +49,7 @@ def build_flat(cam, n_read=300, win=12):
     gain = flat_low / np.median(flat_low)
     offset = flat - flat_low
 
-    CALIB_DIR.mkdir(parents=True, exist_ok=True)
+    ensure_calib_dir()
     np.save(FLAT_GAIN, gain)
     np.save(FLAT_OFFSET, offset)
     np.save(FLAT_BAD, bad)

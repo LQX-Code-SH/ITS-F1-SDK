@@ -1,4 +1,4 @@
-"""f1_thermal — ITS F1 红外测温传感器二次开发 SDK
+"""its_sdk — ITS F1 红外测温传感器二次开发 SDK
 
 支持:
   - 视频流采集 (USB bulk, 25fps, 256x192 Y16)
@@ -8,7 +8,8 @@
   - 实时预览 (OpenCV)
 
 典型用法:
-    from f1_thermal import F1Camera, TempParams, colorize, temp_from_shutter_ref
+    from its_sdk import (F1Camera, TempParams, colorize, temp_from_shutter_ref,
+                         shutter_raw_from_telemetry)
     cam = F1Camera()
     frames = cam.read_frames(10)
     tp = TempParams(frames[0][1])
@@ -17,12 +18,13 @@
 from .camera import F1Camera, VID, PID, CMD_SHUTTER, CMD_WARM, CMD_COLD
 from .temperature import (TempParams, temp_from_shutter_ref, shutter_raw_from_telemetry,
                           raw_to_signal, signal_to_tempC, load_temp_calib, K2C)
-from .palettes import make_palette, colorize, super_resolve, apply_agc, PALETTES
+from .render import make_palette, colorize, super_resolve, apply_agc, PALETTES
 from .denoise import load_flat, nuc_apply, build_flat, temporal_median
 
-__version__ = '1.0.0'
+__version__ = '2.0.0'
 __all__ = ['F1Camera', 'TempParams', 'temp_from_shutter_ref',
            'shutter_raw_from_telemetry', 'raw_to_signal', 'signal_to_tempC',
            'load_temp_calib', 'make_palette', 'colorize', 'super_resolve',
            'apply_agc', 'PALETTES', 'VID', 'PID', 'K2C',
+           'CMD_SHUTTER', 'CMD_WARM', 'CMD_COLD',
            'load_flat', 'nuc_apply', 'build_flat', 'temporal_median']

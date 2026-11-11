@@ -1,17 +1,16 @@
 """测温两点标定 (交互式) — 生成 calib/temp_calib.json
 
-SOP 详见 docs/二次开发接口文档.md 第 5 节
+标定目录默认 calib/，可用 F1_CALIB_DIR 环境变量覆盖。
+SOP 详见 docs/api.md 第 5 节
 """
 import datetime
 import json
 
 import numpy as np
 
-from .camera import F1Camera
-from .temperature import TempParams, shutter_raw_from_telemetry, temp_from_shutter_ref
-from .palettes import apply_agc
-
-CALIB_FILE = __import__('pathlib').Path(__file__).resolve().parent.parent / 'calib' / 'temp_calib.json'
+from ..camera import F1Camera
+from ..temperature import TempParams, shutter_raw_from_telemetry, temp_from_shutter_ref
+from ..paths import CALIB_FILE, ensure_calib_dir
 
 
 def measure_stable_region(cam, label):
@@ -43,8 +42,9 @@ def save_calibration(points):
             'points': points,
             'date': datetime.datetime.now().isoformat(),
             'device': 'ITS F1'}
+    ensure_calib_dir()
     CALIB_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False))
-    from .temperature import reload_temp_calib
+    from ..temperature import reload_temp_calib
     reload_temp_calib()
     return a, b
 

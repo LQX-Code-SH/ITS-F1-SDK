@@ -36,7 +36,12 @@ class F1Camera:
         self.dev = usb.core.find(idVendor=VID, idProduct=PID)
         if self.dev is None:
             raise RuntimeError("未找到 ITS F1 (04b4:000a)，请检查 USB 连接")
-        self.dev.set_configuration()
+        try:
+            self.dev.set_configuration()
+        except usb.core.USBError as e:
+            raise RuntimeError(
+                "无法打开 ITS F1，权限不足? 请用 sudo 运行或配置 udev 规则 (见 README): %s" % e
+            ) from e
         for ifn in (0, 1):
             try:
                 if self.dev.is_kernel_driver_active(ifn):
