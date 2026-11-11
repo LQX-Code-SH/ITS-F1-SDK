@@ -42,7 +42,7 @@ def save_calibration(points):
     data = {'a': round(a, 5), 'b': round(b, 3),
             'points': points,
             'date': datetime.datetime.now().isoformat(),
-            'device': 'F1'}
+            'device': 'ITS F1'}
     CALIB_FILE.write_text(json.dumps(data, indent=2, ensure_ascii=False))
     from .temperature import reload_temp_calib
     reload_temp_calib()
@@ -54,7 +54,7 @@ def main():
     pts = []
     try:
         while True:
-            print('\n==== F1 两点标定 ====')
+            print('\n==== ITS F1 两点标定 ====')
             print('  1. 冷点 (冰水混合物 0.0℃)')
             print('  2. 热点 (热水, 输入温度计实测值)')
             print('  3. 完成并保存标定')

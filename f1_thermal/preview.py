@@ -1,4 +1,4 @@
-"""F1 实时预览 (OpenCV) — 伪彩 + 最高/最低温标记 + 温度条"""
+"""ITS F1 实时预览 (OpenCV) — 伪彩 + 最高/最低温标记 + 温度条"""
 import sys
 import time
 
@@ -50,7 +50,7 @@ def compose(tC, tmin, tmax):
     canvas = np.zeros((H*SCALE + 30, W*SCALE + 90, 3), dtype=np.uint8)
     canvas[15:15+H*SCALE, 0:W*SCALE] = cv2.cvtColor(big, cv2.COLOR_RGB2BGR)
     draw_temp_bar(canvas, tmin, tmax)
-    cv2.putText(canvas, 'F1  %.1f C / %.1f C  %dfps  [%s]'
+    cv2.putText(canvas, 'ITS F1  %.1f C / %.1f C  %dfps  [%s]'
                 % (tmax, tmin, FPS[0], CUR_PALETTE[0]),
                 (6, 12), cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1, cv2.LINE_AA)
     return canvas
@@ -66,7 +66,7 @@ def run(palette='iron_bow'):
     shutter_hold = 0
     fail_count = 0
     buf = []
-    cv2.namedWindow('F1 Thermal', cv2.WINDOW_AUTOSIZE)
+    cv2.namedWindow('ITS F1 Thermal', cv2.WINDOW_AUTOSIZE)
     print("实时预览已启动 (q退出 p色板 s截图 n刷新偏置) — 支持热插拔")
     try:
         while True:
@@ -82,10 +82,10 @@ def run(palette='iron_bow'):
                         pass
                 if cam is None:
                     wait = np.zeros((H*SCALE+30, W*SCALE+90, 3), dtype=np.uint8)
-                    cv2.putText(wait, 'Waiting for F1 device...',
+                    cv2.putText(wait, 'Waiting for ITS F1 device...',
                                 (30, H*SCALE//2), cv2.FONT_HERSHEY_SIMPLEX,
                                 0.7, (0, 255, 255), 1, cv2.LINE_AA)
-                    cv2.imshow('F1 Thermal', wait)
+                    cv2.imshow('ITS F1 Thermal', wait)
                     if cv2.waitKey(500) & 0xFF == ord('q'):
                         break
                     continue
@@ -133,7 +133,7 @@ def run(palette='iron_bow'):
                 fps_n = 0
                 fps_t = time.time()
 
-            cv2.imshow('F1 Thermal', compose(tC, float(tC.min()), float(tC.max())))
+            cv2.imshow('ITS F1 Thermal', compose(tC, float(tC.min()), float(tC.max())))
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):
                 break

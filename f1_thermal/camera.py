@@ -1,9 +1,9 @@
-"""F1 USB 相机核心: 采集 / 帧同步 / 设备信息"""
+"""ITS F1 USB 相机核心: 采集 / 帧同步 / 设备信息"""
 import numpy as np
 import usb.core
 import usb.util
 
-VID, PID = 0x04B4, 0x000A          # Cypress Thermal Camera (InfiRay 方案)
+VID, PID = 0x04B4, 0x000A          # USB 设备识别 ID
 BLOCK, HDR = 14348, 12             # 流块: 12B头 + 14336B数据
 W, H = 256, 192                    # 图像分辨率
 BLOCK_TYPES = [0x01, 0x1D, 0x39, 0x55, 0x71, 0x8D, 0xA9]   # 帧内 7 块循环
@@ -24,7 +24,7 @@ PU_HUE, PU_SATURATION, PU_SHARPNESS, PU_GAMMA = 0x06, 0x07, 0x08, 0x09
 
 
 class F1Camera:
-    """F1 热成像相机 (USB bulk 视频 + EP0 控制)
+    """ITS F1 热成像相机 (USB bulk 视频 + EP0 控制)
 
     用法:
         cam = F1Camera()
@@ -35,7 +35,7 @@ class F1Camera:
     def __init__(self):
         self.dev = usb.core.find(idVendor=VID, idProduct=PID)
         if self.dev is None:
-            raise RuntimeError("未找到 F1 (04b4:000a)，请检查 USB 连接")
+            raise RuntimeError("未找到 ITS F1 (04b4:000a)，请检查 USB 连接")
         self.dev.set_configuration()
         for ifn in (0, 1):
             try:

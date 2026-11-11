@@ -1,4 +1,4 @@
-"""f1_thermal — INREII F1 热成像二次开发 SDK
+"""f1_thermal — ITS F1 红外测温传感器二次开发 SDK
 
 支持:
   - 视频流采集 (USB bulk, 25fps, 256x192 Y16)

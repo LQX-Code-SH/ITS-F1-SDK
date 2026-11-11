@@ -94,7 +94,7 @@ def dark_reference(frames):
 
 
 def nuc_capture_shutter(cam, wait_s=1.2, frames_after=40):
-    """触发快门命令后抓闭合帧作暗场 (F1 未验证: 设备可能不响应 EP0 命令)"""
+    """触发快门命令后抓闭合帧作暗场 (ITS F1 未验证: 设备可能不响应 EP0 命令)"""
     import time
     cam.shutter()
     time.sleep(wait_s)

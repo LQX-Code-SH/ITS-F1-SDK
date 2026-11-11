@@ -1,10 +1,9 @@
-# F1 Thermal Imaging SDK (INREII F1)
+# ITS F1 Thermal Imaging SDK
 
-面向 INREII F1 红外测温传感器（USB `04b4:000a`）的 Linux 端二次开发 SDK，
+面向 ITS F1 红外测温传感器（USB `04b4:000a`）的 Linux 端二次开发 SDK，
 提供 Ubuntu 下的实时预览、测温、拍照与图像处理接口。
 
-> **声明**: 本项目为独立的互操作性研究项目，与 InfiRay / INREII 无任何隶属或授权关系。
-> "INREII"、"InfiRay" 及相关标识为其各自所有者的商标，此处仅作设备型号指代。
+> **声明**: 本项目为独立的开源互操作项目，与设备制造商无任何隶属或授权关系。
 > 本项目按"现状"提供，使用产生的任何风险由使用者自行承担。
 
 ## 功能
